@@ -13,19 +13,17 @@ import jwt from "jsonwebtoken";
 export const registerUser = asyncHandler(async (req, res) => {
     const { username, email, password, fullName, phone, role } = req.body;
 
-    // if (
-    //     [fullName, email, username, password, phone].some(
-    //         (field) => !field || field.trim() === ""
-    //     )
-    // ) {
-    //     throw new ApiError(400, "All fields are required");
-    // }
-
-    // need to emplement all the checks
+    if (
+        [username, email, password, fullName, phone].some(
+            (field) => !field || field.trim() === ""
+        )
+    ) {
+        throw new ApiError(400, "All fields are required");
+    }
 
     const existUser = await User.findOne({
         where: {
-            [Op.or]: [{ username }, { email }, { phone }],
+            [Op.or]: [{ username }, { email }, { phone }], // mainly using username or email, i have added one more
         },
     });
 

@@ -4,6 +4,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 
 export const verifyJWT = asyncHandler(async (req, res, next) => {
+    // console.log("in");
     try {
         const authHeader = req.headers["authorization"];
         const token =
@@ -32,16 +33,3 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
         throw new ApiError(401, error?.message || "Invalid access token");
     }
 });
-
-// const authenticateToken = async (req, res, next) => {
-//     const token = req.headers["authorization"].split(" ")[1];
-//     if (!token) {
-//         return res.status(401).json("Invalid token");
-//     }
-//     jwt.verify(token, "abcd", async (error, decoded) => {
-//         if (error) {
-//             return res.status(403).json("Token Expired");
-//         }
-//         next();
-//     });
-// };

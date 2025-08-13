@@ -1,10 +1,13 @@
 import { Sequelize } from "sequelize";
 import createUserModel from "../models/user.model.js";
+import createProductModel from "../models/product.model.js";
+import createOrderModel from "../models/order.model.js";
+import createOrderItemModel from "../models/orderItem.model.js";
 
-let User = null;
+let sequelize, User, Product, Order, OrderItem;
 
 const connectDb = async (database_URL) => {
-    const sequelize = new Sequelize(database_URL, {
+    sequelize = new Sequelize(database_URL, {
         dialect: "postgres",
         logging: false, // hides raw SQL logs
     });
@@ -13,10 +16,20 @@ const connectDb = async (database_URL) => {
         await sequelize.authenticate();
         console.log("Database connection established successfully.");
 
-        // Initialize model
         User = createUserModel(sequelize);
+        Product = createProductModel(sequelize);
+        Order = createOrderModel(sequelize);
+        OrderItem = createOrderItemModel(sequelize);
 
-        // Sync tables
+        User.hasMany(Order, { foreignKey: "userId" });
+        Order.belongsTo(User, { foreignKey: "userId" });
+
+        Order.hasMany(OrderItem, { foreignKey: "orderId" });
+        OrderItem.belongsTo(Order, { foreignKey: "orderId" });
+
+        Product.hasMany(OrderItem, { foreignKey: "productId" });
+        OrderItem.belongsTo(Product, { foreignKey: "productId" });
+
         await sequelize.sync({ alter: true });
         console.log("Models synchronized successfully.");
     } catch (error) {
@@ -24,4 +37,4 @@ const connectDb = async (database_URL) => {
     }
 };
 
-export { connectDb, User };
+export { connectDb, User, Product, Order, OrderItem, sequelize };
