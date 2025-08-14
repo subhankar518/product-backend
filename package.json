@@ -5,8 +5,10 @@
     "main": "index.js",
     "type": "module",
     "scripts": {
-        "dev": "nodemon -r dotenv/config src/index.js"
+        "dev": "nodemon -r dotenv/config src/index.js",
+        "start": "node src/index.js"
     },
+    "engines": { "node": ">=20" },
     "author": "Subhankar Manna",
     "license": "ISC",
     "dependencies": {
