@@ -8,6 +8,7 @@ import {
     deleteUser,
 } from "../controllers/user.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
+// import { upload } from "../middlewares/multer.middleware.js";
 
 const userRouter = Router();
 
@@ -20,3 +21,9 @@ userRouter.route("/get-all-users").get(verifyJWT, getAllUsers);
 userRouter.route("/delete-user").post(verifyJWT, deleteUser);
 
 export default userRouter;
+
+// This is only for understanding
+
+// userRouter
+//     .route("/register")
+//     .post(upload.single("profilePicture"), registerUser);
