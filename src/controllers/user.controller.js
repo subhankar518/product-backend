@@ -232,3 +232,59 @@ export const logoutUser = asyncHandler(async (req, res) => {
         );
     }
 });
+
+export const getAllUsers = asyncHandler(async (req, res) => {
+    try {
+        if (req.user?.role != "admin") {
+            throw new ApiError(401, "Unauthorized request");
+        }
+        const allUsers = await User.findAll({
+            attributes: { exclude: ["password"] },
+        });
+        res.status(200).json(
+            new ApiResponse(
+                200,
+                { allUsers },
+                "All User fetched Successfully !"
+            )
+        );
+    } catch (error) {
+        console.error("Error fetching users:", error);
+        res.status(error.statusCode || 500).json(
+            new ApiResponse(
+                error.statusCode || 500,
+                null,
+                error.message || "Internal Server Error"
+            )
+        );
+    }
+});
+
+export const deleteUser = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    try {
+        if (req.user?.role != "admin") {
+            throw new ApiError(401, "Unauthorized request");
+        }
+
+        const userExist = await User.findByPk(id);
+
+        if (!userExist) {
+            throw new ApiError(401, "Unauthorized request");
+        }
+        await userExist.destroy();
+
+        res.status(200).json(
+            new ApiResponse(200, {}, "User deleted Successfully !")
+        );
+    } catch (error) {
+        console.error("Error deleting user:", error);
+        res.status(error.statusCode || 500).json(
+            new ApiResponse(
+                error.statusCode || 500,
+                null,
+                error.message || "Internal Server Error"
+            )
+        );
+    }
+});
