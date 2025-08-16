@@ -6,7 +6,10 @@ const app = express();
 
 app.use(
     cors({
-        origin: "https://subhankar518.github.io" || process.env.CORS_ORIGIN,
+        origin: [
+            "https://subhankar518.github.io" || process.env.CORS_ORIGIN,
+            "http://localhost:3000",
+        ],
         credentials: true,
     })
 );
